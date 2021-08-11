@@ -29,6 +29,8 @@ const app = {
 
     let selectColorElement = document.querySelector('#theme-select');
     selectColorElement.addEventListener('change', app.handleSelectChange);
+
+    document.body.className = app.getCookieValue('theme');
   },
 
   // Atelier - Etape 1.2 - Fonction de callback
@@ -112,11 +114,44 @@ const app = {
   handleSelectChange: function (evt) {
 
     let selectedColor = evt.target.value;
+    let name = evt.target.name;
+    console.log(evt.target.name);
     console.log(evt.target.value);
 
     document.body.className = selectedColor;
+    app.setCookie(name, selectedColor);
 
   },
+
+  setCookie: function (name, value) {
+    // Creation d'un cookie pour stocker le theme choisit par l'utilisateur et le 'sauvegarder' pendant 1 jour
+    // Je determine d'abord sa date d'expiration en ms ( ici 1 jour ) au format UTC
+    // Je cree mon cookie
+    document.cookie = name + '=' + value + '; path=/; max-age= 86400';
+    console.log(document.cookie);
+  },
+
+  getCookieVal: function (offset) {
+    var endstr = document.cookie.indexOf(";", offset);
+    if (endstr == -1)
+      endstr = document.cookie.length;
+    return unescape(document.cookie.substring(offset, endstr));
+  },
+
+  getCookieValue: function (name) {
+    let argument = name + "=";
+    let argumentLength = argument.length;
+    let cookielength = document.cookie.length;
+    let numberToIncrement = 0;
+    while (numberToIncrement < cookielength) {
+      var secondNumberToIncrement = numberToIncrement + argumentLength;
+      if (document.cookie.substring(numberToIncrement, secondNumberToIncrement) == argument)
+        return app.getCookieVal(secondNumberToIncrement);
+      numberToIncrement = document.cookie.indexOf(" ", numberToIncrement) + 1;
+      if (numberToIncrement == 0) break;
+    }
+    return null;
+  }
 };
 
 // On execute l'initialisation de notre app lorsque
