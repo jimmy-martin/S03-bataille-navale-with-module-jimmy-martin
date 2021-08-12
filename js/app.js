@@ -7,7 +7,10 @@ const app = {
 
     // Chargement des cookies
     app.loadCookies();
-    
+
+    // Chargement du theme
+    app.updateBodyTheme(app.cookies['battleship-theme']);
+
     // On s'assure d'initialiser les autres modules qui en ont besoin
     grid.init(); // <- Chargement de la grille initiale
 
@@ -121,9 +124,7 @@ const app = {
 
     let selectedTheme = evt.target.value;
 
-    // On va d'abord reinitialiser les themes presents sur le body
-    document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
-    document.body.classList.add(selectedTheme);
+    app.updateBodyTheme(selectedTheme);
 
 
     document.cookie = "battleship-theme=" + selectedTheme + ";max-age=" + (365 * 86400);
@@ -155,38 +156,12 @@ const app = {
     console.log(app.cookies);
   },
 
-  // Creation d'un cookie
-  setCookie: function (name, value) {
-    // Creation d'un cookie pour stocker le theme choisit par l'utilisateur et le 'sauvegarder' pendant 1 jour
-    // Je determine d'abord sa date d'expiration en ms ( ici 1 jour ) au format UTC
-    // Je cree mon cookie
-    document.cookie = name + '=' + value + '; path=/; max-age= 86400';
-    console.log(document.cookie);
-  },
+  updateBodyTheme: function(selectedTheme){
+    // On va d'abord reinitialiser les themes presents sur le body
+    document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
 
-  // Recuperer le contenu du cookie à partir d'un index
-  getCookieVal: function (offset) {
-    let endstr = document.cookie.indexOf(";", offset);
-    if (endstr == -1)
-      endstr = document.cookie.length;
-    return unescape(document.cookie.substring(offset, endstr));
+    document.body.classList.add(selectedTheme);
   },
-
-  // Recuperer la valeur associée au nom du cookie recherché
-  getCookieValue: function (name) {
-    let argument = name + "=";
-    let argumentLength = argument.length;
-    let cookielength = document.cookie.length;
-    let numberToIncrement = 0;
-    while (numberToIncrement < cookielength) {
-      let secondNumberToIncrement = numberToIncrement + argumentLength;
-      if (document.cookie.substring(numberToIncrement, secondNumberToIncrement) == argument)
-        return app.getCookieVal(secondNumberToIncrement);
-      numberToIncrement = document.cookie.indexOf(" ", numberToIncrement) + 1;
-      if (numberToIncrement == 0) break;
-    }
-    return null;
-  }
 };
 
 // On execute l'initialisation de notre app lorsque
