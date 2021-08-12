@@ -16,7 +16,7 @@ const app = {
 
     // On s'assure d'initialiser les autres modules qui en ont besoin
     grid.init(); // <- Chargement de la grille initiale
-
+    score.init(); // <-- Chargement des highscores
     // Atelier - Etape 1.2 - Ajout de l'écouteur d'événement
     // Récupérer l'élement du DOM correspondant au formulaire (grace a sa classe)
     let formElement = document.querySelector(".form");

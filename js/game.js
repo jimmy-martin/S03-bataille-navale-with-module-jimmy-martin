@@ -78,6 +78,9 @@ const game = {
       // Une fois le jeu terminé, on arrête le chrono
       clearInterval(app.intervalID);
 
+      // J'ajoute mon score à la liste des scores
+      score.updateHighScores();
+
       // On utilise simplment le return pour stopper l'execution de la fonction et non pour retourner une valeur
       return;
     }
