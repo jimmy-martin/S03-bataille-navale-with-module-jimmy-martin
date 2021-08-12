@@ -1,17 +1,16 @@
 const grid = {
 
   // La grille
-  cells : [],
+  cells: [],
 
   // Les entêtes (lignes et colonnes)
-  headers : {
-    rows    : [],
-    columns : []
+  headers: {
+    rows: [],
+    columns: []
   },
 
   // Par convention, on va toujours créer une fonction init dans nos modules
-  init: function() 
-  {
+  init: function () {
     // On initialise la grille
     grid.cells = [
       ['', '⛵', '⛵', '⛵', '', '', '', ''],
@@ -25,23 +24,38 @@ const grid = {
     ];
 
     // On initialise les entêtes
-    grid.headers.rows    = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
-    grid.headers.columns = [ 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H' ];
+    grid.headers.rows = [1, 2, 3, 4, 5, 6, 7, 8];
+    grid.headers.columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
     grid.displayGrid();
+
+    // On va compter le nombre de bateaux dans la grille en parcourant les lignes et les colonnes du la grille
+    let initialBoats = 0;
+    for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+
+      for (let columnIndex = 0; columnIndex < 8; columnIndex++) {
+
+        let currentCellContent = grid.cells[rowIndex][columnIndex];
+        if (currentCellContent === '⛵') {
+
+          initialBoats++;
+        }
+      }
+    }
+
+    game.boats = initialBoats;
+
   },
 
   // Etape 1.4 : Vérifier la validité des coordonnées
-  checkCoordinatesInput : function( inputCoordinates )
-  {
+  checkCoordinatesInput: function (inputCoordinates) {
     // On réutiliser notre fonction getGridIndexes
     // Si cette dernière nous renvoi un tableau qui contient
     // au moins un -1, c'est que la coordonnée n'existe pas
-    let gridIndexCoordinates = grid.getGridIndexes( inputCoordinates );
+    let gridIndexCoordinates = grid.getGridIndexes(inputCoordinates);
 
     // Maintenant, je vérifie le contenu de gridIndexCoordinates
-    if( gridIndexCoordinates[0] > -1 && gridIndexCoordinates[1] > -1 )
-    {
+    if (gridIndexCoordinates[0] > -1 && gridIndexCoordinates[1] > -1) {
       // Mes cordonnées sont valides, je renvoi true
       return true;
     }
@@ -54,21 +68,20 @@ const grid = {
   },
 
   // Etape 6 : "Afficher" toute la grille
-  displayGrid : function () 
-  {
+  displayGrid: function () {
     // On affiche les en-têtes des colonnes
     // console.log( "  A B C D E F G H" )
 
     // Petite astuce maintenant qu'on a un tableau de nos entetes :
     // On peut transformer un tableau en string avec .join() !
     // On oublie pas d'ajouter les deux premiers espaces pour que tout s'aligne bien ;)
-    console.log("  " + grid.headers.columns.join(" "));
+    // console.log("  " + grid.headers.columns.join(" "));
 
     // On regarde ce que contient une "case" de la grille
     // console.log( grid[0] );
 
     // Plutot que d'afficher chaque ligne a la main, on boucle !
-    for( let rowIndex = 0; rowIndex < 8; rowIndex++ ) {
+    for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
       // rowIndex contient le numéro de la ligne
       // grid[rowIndex] contient donc la ligne entière
       // On peut donc réutiliser notre fonction d'affichage de ligne !
@@ -82,16 +95,15 @@ const grid = {
 
       // Puis on concatène le retour de la fonction displayLine après tout ça
       // la fonction nous renvoi une string du type "~ ~ ~ ~ b b ~ ~"
-      stringLine += grid.displayLine( grid.cells[rowIndex], rowIndex );
+      stringLine += grid.displayLine(grid.cells[rowIndex], rowIndex);
 
       // On affiche le tout !
-      console.log( stringLine );
+      // console.log( stringLine );
     }
   },
 
   // Etape 3 : Renvoyer une ligne "stringisée"
-  displayLine : function (gridLine, rowIndex) 
-  {
+  displayLine: function (gridLine, rowIndex) {
     // On initialise la chaine de caractères pour la ligne
     let line = "";
 
@@ -122,8 +134,7 @@ const grid = {
         // On utilise le DOM pour mettre à jour le contenu
         // textuel de la case concernée, par une vague
         currentCellElement.textContent = "🌊";
-      }
-      else {
+      } else {
         // Sinon, j'ajoute le caractère rencontré dans la case
         line += currentChar;
 
@@ -132,8 +143,7 @@ const grid = {
 
         if (currentChar === "💥") {
           currentCellElement.classList.add("hit");
-        }
-        else if (currentChar === "❌") {
+        } else if (currentChar === "❌") {
           currentCellElement.classList.add("splash");
         }
       }
@@ -149,23 +159,23 @@ const grid = {
     return line;
   },
 
-  getGridIndexes : function(cellName) {
+  getGridIndexes: function (cellName) {
     // On isole les deux coordonnées
     const letter = cellName[0]; // On peut utiliser une string comme un tableau de lettres
     // Ici on récupère donc la première lettre de la coordonnée (ex: "A" si cellName = "A5")
-  
+
     // Ici on récupère donc la deuxcième coordonnée (ex: "5" si cellName = "A5")
     // Comme notre liste de numéro de lignes est un tableau de nombre
     // On doit convertir notre deuxième partie de coordonée en nombre également
     // Sinon, on arrivera pas a trouver une string "5" dans un tableau de Number [ ... 4, 5, 6, ...]
     const rowCoord = Number(cellName[1]);
-  
+
     // On transforme notre lettre en index de ligne grace a gridHeaders
     // .indexOf va nous trouver a quel index se trouve notre lettre
     // dans le tableau d'entete de colonnes (ex: 0 si letter = "A")
-    const columnIndex = grid.headers.columns.indexOf( letter );
-    const rowIndex = grid.headers.rows.indexOf( rowCoord );
-  
+    const columnIndex = grid.headers.columns.indexOf(letter);
+    const rowIndex = grid.headers.rows.indexOf(rowCoord);
+
     // On oublie pas de renvoyer les deux index trouvés à l'appellant
     // Pour ça, on renvoi un tableau indexé qui contient nos deux index
     return [rowIndex, columnIndex];

@@ -3,6 +3,9 @@ const app = {
   // Ici, je créé une propriété pour stocker mes cookies
   cookies: {},
 
+  // Je créé une propriété qui stocke l'ID de mon chrono
+  intervalID: -1,
+
   init: function () {
 
     // Chargement des cookies
@@ -39,6 +42,9 @@ const app = {
 
     let selectThemeElement = document.querySelector('#theme-select');
     selectThemeElement.addEventListener('change', app.handleSelectChange);
+
+    // On va demarrer le chrono
+    app.intervalID = setInterval(app.handleTimerInterval, 1000);
 
   },
 
@@ -161,6 +167,12 @@ const app = {
     document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
 
     document.body.classList.add(selectedTheme);
+  },
+
+  handleTimerInterval: function (evt){
+    game.score -= 1000;
+    console.log(game.score);
+    
   },
 };
 
