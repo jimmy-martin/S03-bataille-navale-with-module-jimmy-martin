@@ -1,9 +1,9 @@
 html {
   --cell-size: 50px;
-  --color-one: #0bad93;
+  /* --color-one: #0bad93;
   --color-two: #fffdd8;
   --color-hit: green;
-  --color-splash: red;
+  --color-splash: red; */
   font-family: "Lucida Console", sans-serif;
   text-align: center;
 }
@@ -115,4 +115,11 @@ body.terminal {
   --color-two: #000;
   --color-hit: #33ff00;
   --color-splash: #ffbb00;
+}
+
+body.oclock {
+  --color-one: #0bad93;
+  --color-two: #fffdd8;
+  --color-hit: green;
+  --color-splash: red;
 }

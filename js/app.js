@@ -27,10 +27,11 @@ const app = {
       cellElements[cellElementIndex].addEventListener("click", app.handleCellClick)
     }
 
-    let selectColorElement = document.querySelector('#theme-select');
-    selectColorElement.addEventListener('change', app.handleSelectChange);
+    let selectThemeElement = document.querySelector('#theme-select');
+    selectThemeElement.addEventListener('change', app.handleSelectChange);
 
-    document.body.className = app.getCookieValue('theme');
+    document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
+    document.body.classList.add(app.getCookieValue('theme'));
   },
 
   // Atelier - Etape 1.2 - Fonction de callback
@@ -113,16 +114,20 @@ const app = {
 
   handleSelectChange: function (evt) {
 
-    let selectedColor = evt.target.value;
-    let name = evt.target.name;
-    console.log(evt.target.name);
-    console.log(evt.target.value);
+    let selectedTheme = evt.target.value;
+    // document.body.className = selectedTheme; // On va utiliser classList
 
-    document.body.className = selectedColor;
-    app.setCookie(name, selectedColor);
+    // On va d'abord reinitialiser les themes presents sur le body
+    document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
+    document.body.classList.add(selectedTheme);
+    
+    
+    let name = evt.target.name;
+    app.setCookie(name, selectedTheme);
 
   },
 
+  // Creation d'un cookie
   setCookie: function (name, value) {
     // Creation d'un cookie pour stocker le theme choisit par l'utilisateur et le 'sauvegarder' pendant 1 jour
     // Je determine d'abord sa date d'expiration en ms ( ici 1 jour ) au format UTC
@@ -131,13 +136,15 @@ const app = {
     console.log(document.cookie);
   },
 
+  // Recuperer le contenu du cookie à partir d'un index
   getCookieVal: function (offset) {
     var endstr = document.cookie.indexOf(";", offset);
     if (endstr == -1)
       endstr = document.cookie.length;
     return unescape(document.cookie.substring(offset, endstr));
   },
-
+  
+  // Recuperer la valeur associée au nom du cookie recherché
   getCookieValue: function (name) {
     let argument = name + "=";
     let argumentLength = argument.length;
