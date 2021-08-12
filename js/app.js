@@ -30,8 +30,9 @@ const app = {
     let selectThemeElement = document.querySelector('#theme-select');
     selectThemeElement.addEventListener('change', app.handleSelectChange);
 
-    document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
-    document.body.classList.add(app.getCookieValue('theme'));
+    // document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
+    // document.body.classList.add(app.getCookieValue('theme'));
+    console.log(document.cookie);
   },
 
   // Atelier - Etape 1.2 - Fonction de callback
@@ -138,7 +139,7 @@ const app = {
 
   // Recuperer le contenu du cookie à partir d'un index
   getCookieVal: function (offset) {
-    var endstr = document.cookie.indexOf(";", offset);
+    let endstr = document.cookie.indexOf(";", offset);
     if (endstr == -1)
       endstr = document.cookie.length;
     return unescape(document.cookie.substring(offset, endstr));
@@ -151,7 +152,7 @@ const app = {
     let cookielength = document.cookie.length;
     let numberToIncrement = 0;
     while (numberToIncrement < cookielength) {
-      var secondNumberToIncrement = numberToIncrement + argumentLength;
+      let secondNumberToIncrement = numberToIncrement + argumentLength;
       if (document.cookie.substring(numberToIncrement, secondNumberToIncrement) == argument)
         return app.getCookieVal(secondNumberToIncrement);
       numberToIncrement = document.cookie.indexOf(" ", numberToIncrement) + 1;
