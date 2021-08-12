@@ -1,6 +1,13 @@
 const app = {
 
+  // Ici, je créé une propriété pour stocker mes cookies
+  cookies: {},
+
   init: function () {
+
+    // Chargement des cookies
+    app.loadCookies();
+    
     // On s'assure d'initialiser les autres modules qui en ont besoin
     grid.init(); // <- Chargement de la grille initiale
 
@@ -30,9 +37,6 @@ const app = {
     let selectThemeElement = document.querySelector('#theme-select');
     selectThemeElement.addEventListener('change', app.handleSelectChange);
 
-    // document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
-    // document.body.classList.add(app.getCookieValue('theme'));
-    console.log(document.cookie);
   },
 
   // Atelier - Etape 1.2 - Fonction de callback
@@ -116,16 +120,39 @@ const app = {
   handleSelectChange: function (evt) {
 
     let selectedTheme = evt.target.value;
-    // document.body.className = selectedTheme; // On va utiliser classList
 
     // On va d'abord reinitialiser les themes presents sur le body
     document.body.classList.remove('f0f', 'black-and-white', 'terminal', 'oclock');
     document.body.classList.add(selectedTheme);
-    
-    
-    let name = evt.target.name;
-    app.setCookie(name, selectedTheme);
 
+
+    document.cookie = "battleship-theme=" + selectedTheme + ";max-age=" + (365 * 86400);
+    console.log(document.cookie);
+
+  },
+
+  loadCookies: function (evt) {
+
+    // Lecture du cookie
+    let allCookies = document.cookie;
+
+    // On découpe la chaine (key=value; key=value; ...) en plusieurs chaines key=value chacune dans une case de tableau
+    let allCookiesStringArray = allCookies.split('; ');
+    // console.log(allCookiesStringArray);
+
+    // On prepare un tableau qui va range rnos cookies par key
+    for (let cookieStringIndex in allCookiesStringArray) {
+      let cookiePartsArray = allCookiesStringArray[cookieStringIndex].split('=');
+
+      console.log(cookiePartsArray);
+
+      let cookieName = cookiePartsArray[0];
+      let cookieValue = cookiePartsArray[1];
+
+
+      app.cookies[cookieName] = cookieValue;
+    }
+    console.log(app.cookies);
   },
 
   // Creation d'un cookie
@@ -144,7 +171,7 @@ const app = {
       endstr = document.cookie.length;
     return unescape(document.cookie.substring(offset, endstr));
   },
-  
+
   // Recuperer la valeur associée au nom du cookie recherché
   getCookieValue: function (name) {
     let argument = name + "=";
